@@ -1,0 +1,32 @@
+diff --git i/libfprint/drivers/elanspi.c w/libfprint/drivers/elanspi.c
+index c2e3cbc..15a4e6a 100644
+--- i/libfprint/drivers/elanspi.c
++++ w/libfprint/drivers/elanspi.c
+@@ -1702,7 +1702,11 @@ fpi_device_elanspi_class_init (FpiDeviceElanSpiClass *klass)
+   dev_class->scan_type = FP_SCAN_TYPE_SWIPE;
+   dev_class->nr_enroll_stages = 7;       /* these sensors are very hit or miss, may as well record a few extras */
+ 
+-  img_class->bz3_threshold = 24;
++  /* Lowered from the stock 24: this specific sensor unit consistently yields
++   * only ~4-10/24 even on genuine same-finger swipes (measured directly),
++   * so the stock threshold never clears. This is a deliberate false-accept
++   * risk tradeoff for usability - see conversation notes. */
++  img_class->bz3_threshold = 5;
+   img_class->img_open = elanspi_open;
+   img_class->activate = elanspi_activate;
+   img_class->deactivate = elanspi_deactivate;
+diff --git i/meson.build w/meson.build
+index ab09dc1..a9a174a 100644
+--- i/meson.build
++++ w/meson.build
+@@ -330,7 +330,9 @@ if get_option('gtk-examples')
+ endif
+ 
+ subdir('data')
+-subdir('tests')
++installed_tests = false
++installed_tests_testdir = ''
++#subdir('tests') # disabled for local patched build; broken with introspection=false on this meson version
+ 
+ subdir('examples')
+ 

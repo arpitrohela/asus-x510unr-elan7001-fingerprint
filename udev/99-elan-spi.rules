@@ -1,0 +1,11 @@
+# Bind the generic spidev driver to ELAN SPI fingerprint sensors.
+#
+# Mainline Linux ships no dedicated kernel driver for these ACPI IDs, so
+# without this rule the sensor is invisible to userspace entirely (no
+# /dev/spidevX.Y node at all). This uses the driver_override sysfs knob
+# (kernel >= 4.20-ish) to force-bind spidev without needing a recompiled
+# kernel module.
+#
+# Originally from https://github.com/mincrmatt12/elan-spi-fingerprint
+ACTION=="add|change", SUBSYSTEM=="spi", ENV{MODALIAS}=="acpi:ELAN7001:", PROGRAM+="/bin/sh -c '/sbin/modprobe spidev && echo spidev > %S%p/driver_override && echo %k > %S%p/subsystem/drivers/spidev/bind'"
+ACTION=="add|change", SUBSYSTEM=="spi", ENV{MODALIAS}=="acpi:ELAN70A1:", PROGRAM+="/bin/sh -c '/sbin/modprobe spidev && echo spidev > %S%p/driver_override && echo %k > %S%p/subsystem/drivers/spidev/bind'"
