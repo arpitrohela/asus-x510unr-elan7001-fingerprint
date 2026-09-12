@@ -66,7 +66,7 @@ skip the patch and just use the udev rule + a stock `libfprint` build.
 ## Install (Arch-based distros)
 
 ```sh
-git clone https://github.com/<your-username>/asus-x510unr-elan7001-fingerprint
+git clone https://github.com/arpitrohela/asus-x510unr-elan7001-fingerprint
 cd asus-x510unr-elan7001-fingerprint
 ./install.sh
 ```
