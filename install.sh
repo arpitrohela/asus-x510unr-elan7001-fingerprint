@@ -1,15 +1,13 @@
 #!/bin/bash
-# Install a patched libfprint for the ELAN7001 SPI fingerprint sensor found on
-# the ASUS X510UNR (and likely other laptops sharing the same ACPI ID).
+# Installs a patched libfprint for the ELAN7001 SPI fingerprint sensor on the
+# ASUS X510UNR (and probably other laptops with the same ACPI ID).
 #
-# See README.md before running this. It:
-#   1. installs build deps + fprintd/libfprint (for pam_fprintd.so etc.)
-#   2. binds the sensor's SPI device to spidev (kernel ships no driver for it)
-#   3. builds libfprint from source with one small patch applied
-#   4. installs the patched libfprint-2.so.2.0.0 over the pacman-managed one
-#      (the original is backed up first)
+# Read README.md first. This script installs the build deps and fprintd,
+# binds the sensor's SPI device to spidev since the kernel has no driver for
+# it, builds libfprint from source with one small patch applied, and installs
+# it over the pacman-managed copy (the original gets backed up, not deleted).
 #
-# Arch / Arch-based distros only (uses pacman). Tested on Omarchy.
+# Arch based distros only, since it shells out to pacman. Tested on Omarchy.
 
 set -euo pipefail
 
