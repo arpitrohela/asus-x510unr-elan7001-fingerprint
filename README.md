@@ -115,6 +115,26 @@ risk.
 sudo sed -i '1i auth       sufficient                  pam_fprintd.so' /etc/pam.d/sudo
 ```
 
+**For polkit (this is what makes `pkexec` and most graphical "authenticate"
+prompts work)**, create `/etc/pam.d/polkit-1` if it doesn't already exist:
+
+```sh
+sudo tee /etc/pam.d/polkit-1 >/dev/null <<'EOF'
+auth      sufficient pam_fprintd.so
+auth      required pam_unix.so
+
+account   required pam_unix.so
+password  required pam_unix.so
+session   required pam_unix.so
+EOF
+```
+
+I confirmed this myself: once that file is in place, `pkexec true` prompts
+for a fingerprint instead of going straight to a password. On Omarchy there's
+an extra line worth adding that skips the fingerprint check entirely when
+your laptop lid is closed (so it doesn't sit there waiting on a sensor it
+can't reach), see the Omarchy section below for that version.
+
 **For a login manager or lock screen**, add the same line as the first line
 of that service's PAM file, something like `/etc/pam.d/sddm`,
 `/etc/pam.d/gdm-password`, or `/etc/pam.d/system-login` depending on what you
